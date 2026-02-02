@@ -13,10 +13,15 @@ const AgendamentoController = require('./controllers/AgendamentoController');
 app.get('/servicos', ServicoController.listarServicos);
 app.get('/clientes', ClienteController.listarClientes);
 app.get('/veiculos', VeiculoController.listarVeiculos);
-app.get('/agendamentos', AgendamentoController.listarAgendametos);
+app.get('/agendamentos', AgendamentoController.listarAgendamentos);
 
 app.get('/veiculos/clientes/:id_cli', VeiculoController.listarVeiculosPorCliente);
 app.get('/agendamentos/data/:data', AgendamentoController.listarAgendamentosPorData);
+app.get('/agendamentos/servicos/:id_ser', AgendamentoController.listarAgendamentoPorServico);
+app.get('/agendamentos/clientes/:id_cli', AgendamentoController.listarAgendamentoPorCliente);
+app.get('/agendamentos/veiculos/:id_vei', AgendamentoController.listarAgendamentoPorVeiculo);
+app.get('/agendamentos/formas/:forma_pag', AgendamentoController.listarAgendamentoPorFormaPag);
+app.get('/agendamentos/status/:status_pag', AgendamentoController.listarAgendamentoPorStatusPag);
 
 app.post('/servicos', ServicoController.adicionarServicos);
 app.post('/clientes', ClienteController.adicionarClientes);

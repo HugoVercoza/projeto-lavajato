@@ -11,12 +11,13 @@ exports.listarServicos = (req, res) => {
 };
 
 exports.adicionarServicos = (req, res) => {
-    const novo = req.body;
-    const {nome, preco} = req.body;
+    const {nome, preco, tempo} = req.body;
 
     if (!nome || !preco || !tempo) {
         return res.status(400).json({error: "Dados incompletos! Verifique e tente novamente"});
     }
+
+    const novo = {nome, preco, tempo};
 
     ServicoModel.criar(novo, (err, resultado) => {
         if (err) {

@@ -1,6 +1,9 @@
 const AgendamentoModel = require('../models/AgendamentoModel');
 
-exports.listarAgendametos = (req, res) => {
+    const formaValida = ['dinheiro', 'pix', 'credito', 'debito'];
+    const statusValido = ['pendente', 'pago', 'cancelado']; // duas validações para atualizar o agendamento
+
+    exports.listarAgendamentos = (req, res) => {
     AgendamentoModel.buscarTodos((err, resultados) => {
         if (err) {
             return res.status(500).json({error: "Erro ao buscar agendamentos"});
@@ -20,6 +23,76 @@ exports.listarAgendamentosPorData = (req, res) => {
         if (resultados.length == 0) {
             return res.status(404).json({message: "Não possuem agendamentos nessa data"});
         }
+        res.json(resultados);
+    });
+};
+
+exports.listarAgendamentoPorServico = (req, res) => {
+    const {id_ser} = req.params;
+    AgendamentoModel.buscarPorServico(id_ser, (err, resultados) => {
+        if (err) {
+            return res.status(500).json({error: "Erro ao buscar agendamentos"});
+        }
+        if (resultados.length == 0) {
+            return res.status(404).json({message: "Não possuem agendamentos para esse serviço"});
+        }
+
+        res.json(resultados);
+    });
+};
+
+exports.listarAgendamentoPorCliente = (req, res) => {
+    const {id_cli} = req.params;
+    AgendamentoModel.buscarPorCliente(id_cli, (err, resultados) => {
+        if (err) {
+            return res.status(500).json({error: "Erro ao buscar agendamentos"});
+        }
+        if (resultados.length == 0) {
+            return res.status(404).json({message: "Não possuem agendamentos para esse cliente"});
+        }
+
+        res.json(resultados);
+    });
+};
+
+exports.listarAgendamentoPorVeiculo = (req, res) => {
+    const {id_vei} = req.params;
+    AgendamentoModel.buscarPorVeiculo(id_vei, (err, resultados) => {
+        if (err) {
+            return res.status(500).json({error: "Erro ao buscar agendamentos"});
+        }
+        if (resultados.length == 0) {
+            return res.status(404).json({message: "Não possuem agendamentos para esse veiculo"});
+        }
+
+        res.json(resultados);
+    });
+};
+
+exports.listarAgendamentoPorFormaPag = (req, res) => {
+    const {forma_pag} = req.params;
+    AgendamentoModel.buscarPorFormaPag(forma_pag, (err, resultados) => {
+        if (err) {
+            return res.status(500).json({error: "Erro ao buscar agendamentos"});
+        }
+        if (resultados.length == 0) {
+            return res.status(404).json({message: "Não possuem agendamentos para essa forma de pagamento"});
+        }
+
+        res.json(resultados);
+    });
+};
+
+exports.listarAgendamentoPorStatusPag = (req, res) => {
+    const {status_pag} = req.params;
+    AgendamentoModel.buscarPorStatusPag(status_pag, (err, resultados) => {
+        if (err) {
+            return res.status(500).json({error: "Erro ao buscar agendamentos"});
+        }
+        if (resultados.length == 0) {
+            return res.status(404).json({message: "Não possuem agendamentos com esse status"});
+        }
+
         res.json(resultados);
     });
 };
@@ -62,8 +135,16 @@ exports.atualizarAgendamentos = (req, res) => {
     const {id} = req.params;
     
 
+
     if (!id || !data_hora || !id_cli || !id_ser || !id_vei) {
         return res.status(400).json({error: "Dados incompletos! Verifique e tente novamente"});
+    }
+
+    if (forma_pag && !formaValida.includes(forma_pag)) {
+        return res.status(400).json({message: "Forma de pagamento inválida"});
+    }
+    if (status_pag && !statusValido.includes(status_pag)){
+        return res.status(400).json({message: "Status inválido"});
     }
 
     const dados = {data_hora, forma_pag, status_pag, id_cli, id_ser, id_vei}
